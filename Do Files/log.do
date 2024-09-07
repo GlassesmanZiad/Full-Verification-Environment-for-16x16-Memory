@@ -1,8 +1,12 @@
-set design Top
-vlog pack1.sv
+set design top
+vlog Transaction.sv
+vlog Driver.sv
+vlog Sequencer.sv
+vlog ScoreBoard.sv
+vlog Monitor.sv
+vlog Env.sv
 vlog intf.sv
-vlog Memory.v
 vlog $design.sv
-
+vlog Memory.v
 
 
