@@ -43,14 +43,46 @@ It sets up and manages various components needed for verification, such as the d
   <img width="600"  src="Images/Env.png"><br>
 </p>
 
+### **◽️ Transaction:**
+
+A class which is used to represent and manage transactions in a verification environment, including constraints and display functions for debugging purposes and also includes the pin level of the DUT.
+
+**Disp():** This function is used for debugging and displaying the contents of a Transaction object.
+
+ - **str Parameter:**     Determines the type of display message and the Conditions are:
+   
+    - **"Driver Writing":** Displays information relevant to writing transactions, including address, data, and control signals.
+
+    - **"Driver Reading":** Displays information relevant to reading transactions, including enable signal and address.
+
+    - **"Monitor":**        Displays monitored data, including enable signal, address, data output, and validity.
+
+    - **"ScoreBoard":**     Displays the address and data input for scoreboard verification.
+  
+
+            function void Disp (string str ="");
+                if (str == "Driver Writing") begin
+                    $display("T=[%0t] [%s] add = %d , Data_in = %h , wr_en = %d , rd_en = %d " , $time , str,add,Data_in,wr_en,rd_en);
+                    $display("---------------------------------------------------------------------------------------------------");
+                end else if (str == "Driver Reading") begin
+                    $display("T=[%0t] [%s] EN = %d , add = %d " , $time , str,EN,add);
+                    $display("---------------------------------------------------------------------------------------------------");
+                end else if (str == "Monitor") begin
+                    $display("T=[%0t] [%s] EN = %d , add = %d , Data_out = %h , valid_out = %d" , $time , str,EN,add,Data_out,valid_out);
+                    $display("---------------------------------------------------------------------------------------------------");
+                end else if (str == "ScoreBoard")begin 
+                    $display("[%s]  add = %d , Data_in = %h",str,add,Data_in);    
+                end
+            endfunction
+
 ### **◽️ Sequencer:**
 The Sequencer class is designed to manage the flow of transactions between different mailboxes in a verification testbench. It can generate data and place it into different mailboxes, as well as read data from mailboxes.
 
-**Constructor (`new` Function):** Initializes the class with mailboxes and events. These parameters are used to configure the class for specific testbench interactions.
+- **Constructor (`new` Function):** Initializes the class with mailboxes and events. These parameters are used to configure the class for specific testbench interactions.
 
-**Data Generation and Sending:** The generate_data task is responsible for creating and sending transactions to the specified mailboxes. This is typically used to drive data into the DUT (Design Under Test).
+- **Data Generation and Sending:** The generate_data task is responsible for creating and sending transactions to the specified mailboxes. This is typically used to drive data into the DUT (Design Under Test).
 
-**Data Reading:** The read_data task handles generating and sending transactions to another mailbox, which could be used to check responses or interact with other components.
+- **Data Reading:** The read_data task handles generating and sending transactions to another mailbox, which could be used to check responses or interact with other components.
 
 ### **◽️ Driver:**
 
@@ -73,9 +105,13 @@ The driver class interacts with the DUT by sending and receiving transactions vi
         vif_dr.intf_rst = 0'b0;
       endtask
 
-**send_data:** A task waits for a transaction object from dr_mb, then updates the virtual interface signals with the transaction data, and signals the Gen_dn event. The forever loop allows continuous operation until terminated by external control.
+- **send_data:** A task waits for a transaction object from dr_mb, then updates the virtual interface signals with the transaction data, and signals the Gen_dn event. The forever loop allows continuous operation until terminated by external control.
 
-**get_data:** A task waits for a transaction object from dr2_mb, then updates the virtual interface signals and signals the Read_dn event. Similar to send_data, it operates continuously.
+<p align="center">
+  <img width="900"  src="Images/DriverWriting.PNG"><br>
+</p>
+
+- **get_data:** A task waits for a transaction object from dr2_mb, then updates the virtual interface signals and signals the Read_dn event. Similar to send_data, it operates continuously.
 
 
 
@@ -109,6 +145,22 @@ This class code is a key component in a testbench environment, used for checking
  - **Receive Transaction:** Uses SBM_mb.get(T2) to get a transaction from SBM_mb.
  - **Compare Data:** Compares T2.Data_out (actual data) with memSB[T2.add] (expected data). If they match, it displays "Success"; otherwise, it displays "Failed".
 
+<p align="center">
+  <img width="900"  src="Images/ScoreBoard.PNG"><br>
+</p>
+
+
+#### About The Author
+
+**Author**: *Ziad Ahmed Mamdoh*
+
+**Personal Email**: *ziadahmed1447@gmail.com*
+
+**Education**: *Electronics and communication department.*
+
+**College**: *Faculty of Engineering, Assiut university, Egypt.*
+
+**Brief info.**: *Interested in Digital IC Design and Verification.*
 
  
 
